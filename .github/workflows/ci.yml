@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      # Public (browser-safe) placeholders so route analysis / build never
+      # needs real credentials. Never put SUPABASE_SERVICE_ROLE_KEY here as
+      # a plain env value — it must only ever come from a GitHub Actions
+      # secret, and only if a job genuinely needs to hit a real database.
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: placeholder-anon-key
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm typecheck
+
+      # No lint script is configured yet (pre-existing gap, not introduced
+      # by this workflow) — add a `pnpm lint` step here once ESLint is set up.
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build

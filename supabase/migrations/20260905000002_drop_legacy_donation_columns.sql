@@ -1,0 +1,81 @@
+-- ==============================================================================
+-- FoodBridge Bugfix: drop obsolete legacy (v0) NOT NULL columns on donations
+-- Migration: 20260905000002_drop_legacy_donation_columns.sql
+--
+-- SYMPTOM: every real INSERT into public.donations from createDonation()
+-- fails with:
+--   null value in column "category" of relation "donations"
+--   violates not-null constraint
+--
+-- ROOT CAUSE: the actual remote donations table (introspected via
+-- information_schema, not assumed from migration files, since
+-- 20260825000001's `CREATE TABLE IF NOT EXISTS` was a no-op against this
+-- pre-existing v0-bootstrapped table) still carries three v0-era columns
+-- that are NOT NULL with NO DEFAULT and were never part of the FoodBridge
+-- schema in any migration:
+--   category      food_category enum  (cooked_meals, packaged_food, bakery,
+--                                       fruits, vegetables, dairy, beverages,
+--                                       other)
+--   quantity_kg   numeric, CHECK (quantity_kg > 0)
+--   expiry_time   timestamptz
+--
+-- INVESTIGATION (read-only, against the live database):
+--   - No RLS policy predicate on any table references any of the three
+--     columns.
+--   - No trigger function body references them (checked
+--     update_updated_at_column, protect_donation_fields,
+--     sync_donation_location).
+--   - No SECURITY DEFINER function references them (checked pg_proc.prosrc
+--     for every function in the public schema — claim_donation,
+--     generate_match_recommendations, assign_pickup_to_logistics, and every
+--     helper all reference only the FoodBridge columns: food_category,
+--     quantity, expires_at).
+--   - The only structural dependents are donations_quantity_kg_check (a
+--     CHECK constraint on quantity_kg itself, dropped along with the
+--     column) and donations_expiry_idx (a btree index on expiry_time,
+--     automatically dropped by Postgres along with the column).
+--   - No application code (lib/, components/, app/) references category,
+--     quantity_kg, or expiry_time anywhere.
+--
+-- WHY DROP RATHER THAN POPULATE (the alternative the task allows when a
+-- truthful mapping exists):
+--   - category's enum values are a DIFFERENT, incompatible taxonomy from
+--     the application's actual food_category values (FOOD_CATEGORIES in
+--     lib/validations/donation.ts: 'Fruits & Vegetables', 'Dairy Products',
+--     'Bakery & Bread', 'Grains & Cereals', 'Canned Goods', 'Prepared
+--     Meals', 'Beverages', 'Frozen Foods', 'Meat & Poultry', 'Snacks &
+--     Packaged', 'Other'). Five of those eleven values (Grains & Cereals,
+--     Canned Goods, Frozen Foods, Meat & Poultry, Snacks & Packaged) have NO
+--     honest equivalent in the legacy enum — any mapping would either
+--     silently misclassify them or force everything into 'other',
+--     discarding real information. That is not a truthful mapping.
+--   - quantity_kg assumes every donation is measured in kilograms, but the
+--     application legitimately supports non-kg units (UNIT_OPTIONS: kg,
+--     lbs, pieces, servings, boxes, bags, liters). Writing the raw numeric
+--     quantity into quantity_kg for a donation recorded in, say, "pieces"
+--     would store a false weight.
+--   - expiry_time alone would have a clean, truthful 1:1 mapping to
+--     expires_at, but since nothing reads expiry_time anywhere (see
+--     investigation above) and the other two columns cannot be populated
+--     truthfully, keeping one redundant, unread duplicate column while
+--     dropping the other two would be an inconsistent half-measure with no
+--     benefit.
+--
+-- This migration does not touch RLS, RPCs, triggers, indexes on other
+-- columns, or any FoodBridge-defined column. Dropping expiry_time also
+-- drops donations_expiry_idx (a plain btree index with no other use).
+--
+-- NOTE (separately reported, not addressed by this migration): the same
+-- investigation surfaced that legacy v0 RLS policies still coexist with the
+-- FoodBridge policies on 5 tables (donations, notifications, organizations,
+-- pickups, profiles). Since Postgres OR's multiple permissive policies for
+-- the same command together, this measurably weakens the intended
+-- role-based access on those tables and needs its own dedicated fix — it is
+-- out of scope for this migration, which only removes the three NOT NULL
+-- columns blocking donation creation.
+-- ==============================================================================
+
+ALTER TABLE public.donations
+  DROP COLUMN IF EXISTS category,
+  DROP COLUMN IF EXISTS quantity_kg,
+  DROP COLUMN IF EXISTS expiry_time;
