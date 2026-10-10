@@ -58,6 +58,22 @@ Every action must, in order: authenticate (`getAuthContext()`), authorize (role/
 
 Zod schemas live in `lib/validations/`, one file per domain, reused by both the action layer and (where relevant) client-side pre-checks. Do not duplicate a schema — extend or compose the existing one (`.partial()`, `.omit()`, etc.).
 
+## Demo mode
+
+- Opt-in via `NEXT_PUBLIC_FOODBRIDGE_DEMO_MODE=true` (only the exact string `true` enables it; default off). When off, `/demo` 404s and the login page hides "Explore demo".
+- `/demo` is public and session-independent (`proxy.ts` skips Supabase for it). It renders the real `FoodBridgeDashboard` with simulated data from `lib/demo/` held in sessionStorage. A role switcher picks a fictional persona — it is never an authorization input for anything real.
+- `FoodBridgeDashboard` gets its mutations from an injected `DashboardActions` (`lib/services/dashboard-actions.ts`): the real Server Actions by default, `lib/demo/actions.ts` in demo mode. New dashboard mutations must go through `useDashboardActions()` and get a demo implementation in `lib/demo/engine.ts`.
+- `lib/demo/**` and `components/demo/**` must never value-import `lib/actions/*` or any Supabase client (enforced by `lib/demo/actions.test.ts`).
+- Real and demo views share `buildDashboardViewData()` (`lib/services/dashboard-view-data.ts`) and `getDashboardNavViews()` (`lib/services/dashboard-navigation.ts`).
+
+## UI conventions
+
+- Brand tokens live in `app/globals.css` (`paper`, `ink`, `forest-*`, `sage-*`, `tomato-*`, `shadow-soft|lift|float`, `ease-out-soft`); neutrals use Tailwind `stone`. Surfaces are light-first and opt into `[color-scheme:light]`.
+- Fonts via `next/font` in `app/layout.tsx`: Fraunces (`font-display`) for headings only, Geist for all UI/data text.
+- Motion uses `motion/react` with shared tokens in `components/ui/motion.ts`; the dashboard is wrapped in `MotionConfig reducedMotion="user"`. No new animation libraries.
+- The food journey (`components/food-journey.tsx`) renders only from `lib/services/food-journey.ts`, which maps real pickup/donation status — never hardcode or time-drive its state. Anything illustrative must be labelled as such.
+- `/` is a public landing page for signed-out visitors (signed-in users redirect to `/dashboard`). It makes no impact, partner or testimonial claims.
+
 ## Testing
 
 Vitest, `*.test.ts` colocated with the module under test. Test pure functions: validation schemas, `lib/services/*` authorization and view-model logic. Do not test framework glue (Server Actions calling Supabase, page components) with unit tests — that needs a real database, which isn't available in this environment; a genuine integration-test setup is a deliberate follow-up decision, not a mock-heavy substitute.

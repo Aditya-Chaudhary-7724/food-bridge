@@ -1,6 +1,12 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import { Fraunces, Geist } from 'next/font/google'
 import './globals.css'
+
+// Fraunces (editorial serif) is reserved for display headings; Geist carries
+// all UI and data text. Both are self-hosted by next/font at build time.
+const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces', display: 'swap', axes: ['opsz'] })
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist', display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'FoodBridge | Donor workspace',
@@ -28,8 +34,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   colorScheme: 'light dark',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
+    { media: '(prefers-color-scheme: light)', color: '#f7f5ef' },
+    { media: '(prefers-color-scheme: dark)', color: '#1b1d1b' },
   ],
 }
 
@@ -39,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-[#f5f8f7]">
+    <html lang="en" className={`${fraunces.variable} ${geist.variable} bg-paper`}>
       <body className="antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

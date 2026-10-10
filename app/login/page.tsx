@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/client'
 import { getLoginAuthError } from '@/lib/services/auth-error-mapping'
+import { isDemoModeEnabled } from '@/lib/demo/config'
+import AuthShell, { authInputClass, authLabelClass, authPrimaryButtonClass } from '@/components/auth-shell'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -62,20 +64,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f6f8f7] px-6">
-      <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-        <div className="mb-8">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-xl text-white">
-            🌱
-          </div>
-
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">Welcome back</h1>
-          <p className="mt-2 text-sm text-gray-500">Sign in to your FoodBridge workspace.</p>
-        </div>
-
+    <AuthShell title="Welcome back" subtitle="Sign in to your FoodBridge workspace.">
         <form onSubmit={handleLogin} className="space-y-5" noValidate>
           <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className={authLabelClass}>
               Email
             </label>
 
@@ -87,12 +79,12 @@ export default function LoginPage() {
               onChange={(event) => setEmail(event.target.value)}
               placeholder="you@example.com"
               autoComplete="email"
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className={authInputClass}
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className={authLabelClass}>
               Password
             </label>
 
@@ -104,32 +96,40 @@ export default function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
               autoComplete="current-password"
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className={authInputClass}
             />
           </div>
 
           {error && (
-            <div aria-live="polite" className="rounded-xl border border-red-100 bg-red-50 p-3 text-sm text-red-600">
+            <div aria-live="polite" role="alert" className="rounded-lg border border-tomato-200 bg-tomato-50 p-3 text-sm text-tomato-800">
               {error}
             </div>
           )}
 
-          <button
-            disabled={loading}
-            type="submit"
-            className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-          >
+          <button disabled={loading} type="submit" className={authPrimaryButtonClass}>
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-500">
+        <p className="mt-6 text-sm text-stone-700">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="font-medium text-emerald-600 hover:text-emerald-700 hover:underline">
+          <Link href="/register" className="font-semibold text-forest-700 underline-offset-4 hover:text-forest-900 hover:underline">
             Create one
           </Link>
         </p>
-      </div>
-    </main>
+
+        {isDemoModeEnabled() && (
+          <div className="mt-8 border-t border-stone-200 pt-6">
+            <p className="text-sm font-medium text-ink">Just looking around?</p>
+            <Link
+              href="/demo"
+              className="mt-3 flex min-h-11 w-full items-center justify-center rounded-lg border border-stone-300 bg-white px-4 font-semibold text-forest-800 transition hover:border-forest-400 hover:bg-sage-50 active:scale-[.99]"
+            >
+              Explore demo
+            </Link>
+            <p className="mt-2 text-xs text-stone-600">No sign-in needed — sample data only, nothing is saved.</p>
+          </div>
+        )}
+    </AuthShell>
   )
 }

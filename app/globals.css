@@ -4,6 +4,50 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Brand palette scales — used directly by the light-first app surfaces. */
+@theme {
+  --color-paper: #f7f5ef;
+  --color-ink: #292c29;
+
+  --color-forest-50: #eef3ef;
+  --color-forest-100: #d9e5dc;
+  --color-forest-200: #b6ccbc;
+  --color-forest-300: #8daf97;
+  --color-forest-400: #5f8c6f;
+  --color-forest-500: #3d6f55;
+  --color-forest-600: #2c5e47;
+  --color-forest-700: #214e3d;
+  --color-forest-800: #1a3f31;
+  --color-forest-900: #132f25;
+  --color-forest-950: #0b1d17;
+
+  --color-sage-50: #f3f6f1;
+  --color-sage-100: #e4ebe0;
+  --color-sage-200: #cbd7c5;
+  --color-sage-300: #a8b9a0;
+  --color-sage-400: #889e7f;
+  --color-sage-500: #6b8263;
+
+  --color-tomato-50: #fdf1ef;
+  --color-tomato-100: #fadcd7;
+  --color-tomato-200: #f3b8ae;
+  --color-tomato-300: #ea8f80;
+  --color-tomato-400: #e06f5f;
+  --color-tomato-500: #d95545;
+  --color-tomato-600: #c04234;
+  --color-tomato-700: #9f3428;
+  --color-tomato-800: #7e2a21;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, 'Times New Roman', serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --shadow-soft: 0 1px 2px rgb(41 44 41 / 0.04), 0 1px 1px rgb(41 44 41 / 0.03);
+  --shadow-lift: 0 1px 2px rgb(41 44 41 / 0.05), 0 8px 24px -12px rgb(41 44 41 / 0.18);
+  --shadow-float: 0 12px 40px -12px rgb(41 44 41 / 0.28);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @theme inline {
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -47,110 +91,79 @@
 
 :root {
   color-scheme: light;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  /* FoodBridge palette: warm paper, forest green (primary), sage, tomato
+     (brand accent / destructive), warm charcoal ink. Mapped onto the
+     shadcn semantic tokens so shared primitives inherit the brand. */
+  --background: #f7f5ef;
+  --foreground: #292c29;
+  --card: #ffffff;
+  --card-foreground: #292c29;
+  --popover: #ffffff;
+  --popover-foreground: #292c29;
+  --primary: #214e3d;
+  --primary-foreground: #f7f5ef;
+  --secondary: #eeebe2;
+  --secondary-foreground: #292c29;
+  --muted: #eeebe2;
+  --muted-foreground: #615d55;
+  --accent: #e4ebe0;
+  --accent-foreground: #214e3d;
+  --destructive: #c04234;
+  --border: #e3dfd4;
+  --input: #d9d4c7;
+  --ring: #3d6f55;
+  --chart-1: #214e3d;
+  --chart-2: #a8b9a0;
+  --chart-3: #d95545;
+  --chart-4: #5f8c6f;
+  --chart-5: #292c29;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #fbfaf6;
+  --sidebar-foreground: #292c29;
+  --sidebar-primary: #214e3d;
+  --sidebar-primary-foreground: #f7f5ef;
+  --sidebar-accent: #e4ebe0;
+  --sidebar-accent-foreground: #214e3d;
+  --sidebar-border: #e3dfd4;
+  --sidebar-ring: #3d6f55;
 }
 
+/* Warm dark adaptation of the same tokens. The app surfaces are designed
+   light-first (they opt into `color-scheme: light`), so this only affects
+   token-driven primitives under an explicit `.dark` ancestor. */
 .dark {
   color-scheme: dark;
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    color-scheme: dark;
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
-  }
+  --background: #1b1d1b;
+  --foreground: #efece4;
+  --card: #242724;
+  --card-foreground: #efece4;
+  --popover: #242724;
+  --popover-foreground: #efece4;
+  --primary: #a8c7b2;
+  --primary-foreground: #132f25;
+  --secondary: #2f322f;
+  --secondary-foreground: #efece4;
+  --muted: #2f322f;
+  --muted-foreground: #b3ada1;
+  --accent: #2c3a31;
+  --accent-foreground: #d9e5dc;
+  --destructive: #e8806f;
+  --border: rgb(239 236 228 / 12%);
+  --input: rgb(239 236 228 / 18%);
+  --ring: #8daf97;
+  --chart-1: #a8c7b2;
+  --chart-2: #a8b9a0;
+  --chart-3: #e8806f;
+  --chart-4: #5f8c6f;
+  --chart-5: #efece4;
+  --sidebar: #242724;
+  --sidebar-foreground: #efece4;
+  --sidebar-primary: #a8c7b2;
+  --sidebar-primary-foreground: #132f25;
+  --sidebar-accent: #2c3a31;
+  --sidebar-accent-foreground: #d9e5dc;
+  --sidebar-border: rgb(239 236 228 / 12%);
+  --sidebar-ring: #8daf97;
 }
 
 @layer base {
@@ -158,6 +171,23 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground;
+    font-feature-settings: 'ss01', 'cv11';
+  }
+  /* One consistent, clearly visible keyboard focus treatment. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-forest-500);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -2,8 +2,15 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 import type { Database } from '@/lib/db/types'
+import { isDemoPath } from '@/lib/demo/config'
 
 export async function proxy(request: NextRequest) {
+  // The demo route is public and session-independent: it must not depend on
+  // (or refresh) a Supabase Auth session. Every other route is unchanged.
+  if (isDemoPath(request.nextUrl.pathname)) {
+    return NextResponse.next({ request })
+  }
+
   let response = NextResponse.next({ request })
 
   const supabase = createServerClient<Database>(

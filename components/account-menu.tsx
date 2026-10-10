@@ -24,8 +24,8 @@ function MenuItem({
   destructive?: boolean
 }) {
   const classes = destructive
-    ? 'text-rose-600 hover:bg-rose-50 focus-visible:bg-rose-50'
-    : 'text-slate-700 hover:bg-slate-50 focus-visible:bg-slate-50'
+    ? 'text-tomato-600 hover:bg-tomato-50 focus-visible:bg-tomato-50'
+    : 'text-stone-800 hover:bg-stone-50 focus-visible:bg-stone-50'
 
   const content = (
     <>
@@ -40,7 +40,7 @@ function MenuItem({
         href={href}
         onClick={onClick}
         role="menuitem"
-        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${classes}`}
+        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-500 ${classes}`}
       >
         {content}
       </Link>
@@ -52,7 +52,7 @@ function MenuItem({
       type="button"
       onClick={onClick}
       role="menuitem"
-      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${classes}`}
+      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-500 ${classes}`}
     >
       {content}
     </button>
@@ -153,21 +153,21 @@ export default function AccountMenu() {
         aria-expanded={isOpen}
         aria-controls="account-menu"
         onClick={() => setIsOpen((current) => !current)}
-        className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-left shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+        className="flex items-center gap-2 rounded-lg border border-stone-300 bg-white px-1.5 py-1 text-left transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-500"
       >
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white ring-2 ring-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-forest-700 text-xs font-semibold text-paper">
           {isLoading ? '...' : initials}
         </div>
         <div className="hidden min-w-0 sm:block">
-          <div className="truncate text-sm font-semibold text-slate-800">
+          <div className="truncate text-sm font-semibold text-stone-800">
             {isLoading ? 'Loading...' : displayName}
           </div>
-          <div className="truncate text-[11px] text-slate-500">
+          <div className="truncate text-[11px] text-stone-600">
             {user?.email ?? 'Account'}
           </div>
         </div>
         <ChevronDown
-          className={`hidden h-4 w-4 text-slate-400 transition sm:block ${isOpen ? 'rotate-180' : ''}`}
+          className={`hidden h-4 w-4 text-stone-500 transition sm:block ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -181,15 +181,15 @@ export default function AccountMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(20rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-xl"
+            className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(20rem,calc(100vw-1.5rem))] overflow-hidden rounded-xl border border-stone-200 bg-white p-2 shadow-float"
           >
-            <div className="flex items-center gap-3 border-b border-slate-100 px-3 py-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-700 text-sm font-bold text-white">
+            <div className="flex items-center gap-3 border-b border-stone-100 px-3 py-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-forest-700 text-sm font-bold text-white">
                 {initials}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-slate-900">{displayName}</p>
-                <p className="truncate text-xs text-slate-500">{user?.email ?? 'Account'} </p>
+                <p className="truncate text-sm font-semibold text-ink">{displayName}</p>
+                <p className="truncate text-xs text-stone-600">{user?.email ?? 'Account'} </p>
               </div>
             </div>
 
@@ -199,11 +199,11 @@ export default function AccountMenu() {
               <MenuItem href="/notifications" icon={Bell} label="Notifications" onClick={() => setIsOpen(false)} />
             </div>
 
-            <div className="my-2 h-px bg-slate-100" />
+            <div className="my-2 h-px bg-stone-100" />
 
             <div className="px-1 pb-1">
               {error && (
-                <div className="mb-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">
+                <div className="mb-2 rounded-lg border border-tomato-200 bg-tomato-50 px-3 py-2 text-xs text-tomato-700">
                   {error}
                 </div>
               )}
@@ -213,7 +213,7 @@ export default function AccountMenu() {
                 aria-label="Log out"
                 onClick={handleSignOut}
                 disabled={isSigningOut}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-tomato-600 transition hover:bg-tomato-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tomato-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <LogOut className="h-4 w-4" />
                 <span>{isSigningOut ? 'Logging out...' : 'Log out'}</span>
