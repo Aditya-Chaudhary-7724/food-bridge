@@ -16,11 +16,11 @@ export default async function NotificationsPage() {
   const result = await listMyNotifications()
 
   return (
-    <main className="min-h-screen bg-[#f5f8f7] px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-paper px-4 py-8 text-ink sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/dashboard"
-          className="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900"
+          className="mb-6 inline-flex items-center gap-2 rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:text-ink"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard

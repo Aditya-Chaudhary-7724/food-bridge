@@ -88,35 +88,35 @@ export function ExpiryDatePicker({
       <Popover.Trigger
         type="button"
         aria-label={ariaLabel}
-        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm outline-none focus:border-emerald-500 aria-expanded:border-emerald-500 aria-expanded:ring-2 aria-expanded:ring-emerald-100"
+        className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-left text-sm outline-none transition focus:border-forest-500 focus:ring-3 focus:ring-forest-100 aria-expanded:border-forest-500 aria-expanded:ring-3 aria-expanded:ring-forest-100"
       >
-        {selected ? <span className="text-slate-900">{formatDisplayDate(value)}</span> : <span className="text-slate-400">Select date</span>}
+        {selected ? <span className="text-ink">{formatDisplayDate(value)}</span> : <span className="text-stone-500">Select date</span>}
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={8} align="start" className="z-[80]">
-          <Popover.Popup className="w-72 origin-[var(--transform-origin)] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl outline-none transition-[scale,opacity] duration-100 ease-out data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0">
+          <Popover.Popup className="w-72 origin-[var(--transform-origin)] rounded-xl border border-stone-200 bg-white p-4 shadow-float outline-none transition-[scale,opacity] duration-100 ease-out data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0">
             <div className="flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setViewDate(new Date(year, month - 1, 1))}
                 aria-label="Previous month"
-                className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+                className="rounded-lg p-1.5 text-stone-600 hover:bg-stone-100"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-ink">
                 {viewDate.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
               </p>
               <button
                 type="button"
                 onClick={() => setViewDate(new Date(year, month + 1, 1))}
                 aria-label="Next month"
-                className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+                className="rounded-lg p-1.5 text-stone-600 hover:bg-stone-100"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
-            <div className="mt-3 grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-400">
+            <div className="mt-3 grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-stone-500">
               {WEEKDAY_LABELS.map((w) => (
                 <div key={w}>{w}</div>
               ))}
@@ -135,10 +135,10 @@ export function ExpiryDatePicker({
                     aria-current={isSelected ? 'date' : undefined}
                     className={`h-8 w-8 rounded-lg text-sm font-medium transition ${
                       isSelected
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-forest-600 text-white'
                         : disabled
-                          ? 'cursor-not-allowed text-slate-300'
-                          : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-700'
+                          ? 'cursor-not-allowed text-stone-300'
+                          : 'text-stone-800 hover:bg-forest-50 hover:text-forest-700'
                     }`}
                   >
                     {date.getDate()}

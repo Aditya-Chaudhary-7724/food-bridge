@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { getFriendlyAuthError } from "@/lib/services/auth-error-mapping"
 import { SIGNUP_ROLE_OPTIONS, type SignupRole } from "@/lib/validations/auth"
+import AuthShell, { authInputClass, authLabelClass, authPrimaryButtonClass } from "@/components/auth-shell"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -93,25 +94,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f6f8f7] px-6 py-12 text-gray-900">
-      <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-md items-center justify-center">
-        <div className="w-full rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-
-          {/* Header */}
-          <div className="mb-8">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-xl text-white">
-              🌱
-            </div>
-
-            <h1 className="text-3xl font-semibold tracking-tight text-gray-950">
-              Join FoodBridge
-            </h1>
-
-            <p className="mt-2 text-sm text-gray-600">
-              Create your account and help reduce food waste.
-            </p>
-          </div>
-
+    <AuthShell title="Join FoodBridge" subtitle="Create an account to donate surplus, receive it for your organization, or help deliver it.">
           {/* Registration Form */}
           <form onSubmit={handleRegister} className="space-y-5" noValidate>
 
@@ -119,7 +102,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="fullName"
-                className="mb-2 block text-sm font-medium text-gray-900"
+                className={authLabelClass}
               >
                 Full name
               </label>
@@ -132,7 +115,7 @@ export default function RegisterPage() {
                 onChange={(event) => setFullName(event.target.value)}
                 placeholder="Your name"
                 autoComplete="name"
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-950 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className={authInputClass}
               />
             </div>
 
@@ -140,7 +123,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="email"
-                className="mb-2 block text-sm font-medium text-gray-900"
+                className={authLabelClass}
               >
                 Email
               </label>
@@ -153,7 +136,7 @@ export default function RegisterPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
                 autoComplete="email"
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-950 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className={authInputClass}
               />
             </div>
 
@@ -161,7 +144,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-2 block text-sm font-medium text-gray-900"
+                className={authLabelClass}
               >
                 Password
               </label>
@@ -175,10 +158,10 @@ export default function RegisterPage() {
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="••••••••"
                 autoComplete="new-password"
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-950 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className={authInputClass}
               />
 
-              <p className="mt-1.5 text-xs text-gray-500">
+              <p className="mt-1.5 text-xs text-stone-600">
                 Minimum 6 characters
               </p>
             </div>
@@ -187,7 +170,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="role"
-                className="mb-2 block text-sm font-medium text-gray-900"
+                className={authLabelClass}
               >
                 I am joining as
               </label>
@@ -196,7 +179,7 @@ export default function RegisterPage() {
                 id="role"
                 value={role}
                 onChange={(event) => setRole(event.target.value as SignupRole)}
-                className="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-950 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className={authInputClass}
               >
                 {SIGNUP_ROLE_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -210,7 +193,8 @@ export default function RegisterPage() {
             {error && (
               <div
                 aria-live="polite"
-                className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                role="alert"
+                className="rounded-lg border border-tomato-200 bg-tomato-50 p-3 text-sm text-tomato-800"
               >
                 {error}
               </div>
@@ -220,7 +204,7 @@ export default function RegisterPage() {
             {success && (
               <div
                 aria-live="polite"
-                className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700"
+                className="rounded-lg border border-forest-200 bg-forest-50 p-3 text-sm text-forest-800"
               >
                 {success}
               </div>
@@ -230,25 +214,22 @@ export default function RegisterPage() {
             <button
               disabled={loading}
               type="submit"
-              className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-medium text-white transition hover:bg-emerald-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+              className={authPrimaryButtonClass}
             >
               {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
 
           {/* Login Link */}
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-sm text-stone-700">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-medium text-emerald-600 hover:text-emerald-700 hover:underline"
+              className="font-semibold text-forest-700 underline-offset-4 hover:text-forest-900 hover:underline"
             >
               Sign in
             </Link>
           </p>
-
-        </div>
-      </div>
-    </main>
+    </AuthShell>
   )
 }
